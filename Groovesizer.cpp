@@ -48,6 +48,11 @@ unsigned long loopCount = 0;
 // Used for debouncing the button reading.
 unsigned long lastButtonRead = 0;
 
+
+/**
+ * Constructor, sets up the pinModes for required IO
+ * Does initial read of state to avoid triggering callbacks on first loop.
+ */
 Groovesizer::Groovesizer(){
     // setup
     pinMode(LED_DATA_PIN,  OUTPUT);
@@ -70,48 +75,69 @@ Groovesizer::Groovesizer(){
     this->read();
 }
 
+/**
+ * Destructor
+ */ 
 Groovesizer::~Groovesizer(){
-  //destructor
-
   _buttonUpCallback = NULL;
   _buttonDownCallback = NULL;
   _potChangeCallback = NULL;
 }
 
+/**
+ * Sets the specified LED on or off according to val.
+ * 
+ * Row 0 is bottom row, col 0 is left-most column.
+ */
 void Groovesizer::setLed(int row, int col, bool val){
   bitWrite(ledRows[row], Groovesizer::MATRIX_COLS - 1 - col, val);
 }
 
+/**
+ * sets a whole row of LEDs, each bit of `val` corresponds to an LED. 
+ * LSB is right-most, MSB is left-most.
+ */
 void Groovesizer::setLedRow(int row, byte val){
   ledRows[row] = val;
 }
 
+/**
+ * Gets the current button-state of the specified button.
+ * Row 0 is bottom, col 0 is left-most.
+ */
 bool Groovesizer::getButton(byte row, byte col){
   return bitRead(buttonState[row], col);
 }
 
-// reads any values from pots, buttons, etc
-// triggers callback functions
-// call at start of loop()
+/**
+ * Reads any values from pots, buttons, etc
+ * triggers callback functions
+ * MUST be called at start of loop()
+ */
 void Groovesizer::read(){
     this->readButtons();
     this->readPots();
 }
 
-// writes values to LEDs
-// call at end of loop()
+/** 
+ * Writes values to LEDs
+ * MUST be called at end of loop()
+ */ 
 void Groovesizer::write(){
     this->writeLeds();
     loopCount++;
 }
 
+/**
+ * Reads button values
+ * only collects data every DEBOUNCE_MILLIS ms to debounce buttons.
+ */
 void Groovesizer::readButtons(){
     //debounce - only read buttons every DEBOUNCE_MILLIS ms
     if(lastButtonRead + DEBOUNCE_MILLIS < millis()){
       // skip this time
       return;
     }
-
 
     //Collect button data from the 4901s
     //set latch to 0 to transmit data serially  
@@ -153,11 +179,11 @@ void Groovesizer::readPots(){
   for(byte i = 0; i < NUM_POTS; i++){
     int potVal = this->getPotValue(i);
 
-    if(potVal << 4 != prevPotState[i]){
+    if(potVal >> 3 != prevPotState[i]){
       if(_potChangeCallback){
         _potChangeCallback(i, potVal);
       }
-      prevPotState[i] = potVal << 4;
+      prevPotState[i] = potVal >> 3;
     }
   }
 }
