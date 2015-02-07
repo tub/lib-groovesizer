@@ -37,7 +37,10 @@ byte ledRows[Groovesizer::MATRIX_ROWS];
 
 // booleans for whether button is currently pressed or not
 byte buttonState[Groovesizer::MATRIX_ROWS];
+// was it previously pressed or not?
 byte prevButtonState[Groovesizer::MATRIX_ROWS];
+// when was it pressed last? used for 'hold' time
+unsigned int buttonDownTime[Groovesizer::MATRIX_ROWS * Groovesizer::MATRIX_COLS];
 
 int prevPotState[Groovesizer::NUM_POTS];
 
@@ -160,10 +163,12 @@ void Groovesizer::readButtons(){
             bool curr = bitRead(buttonState[row], col);
             if(_buttonDownCallback && !prev && curr){
               // button down
+              buttonDownTime[(row * Groovesizer::MATRIX_COLS) + col] = millis();
               _buttonDownCallback(row, col);
             }else if(_buttonUpCallback && !curr && prev){
               //button up
-              _buttonUpCallback(row, col);
+              unsigned int heldFor = millis() - buttonDownTime[(row * Groovesizer::MATRIX_COLS) + col];
+              _buttonUpCallback(row, col, heldFor);
             }
           }
       }
@@ -235,7 +240,7 @@ byte Groovesizer::shiftIn(int dataPin, int clockPin) {
   return data;
 }
 
-void Groovesizer::setButtonUpListener(void (*buttonUpCallback)(byte col, byte row)){
+void Groovesizer::setButtonUpListener(void (*buttonUpCallback)(byte col, byte row, unsigned int millisHeldFor)){
   _buttonUpCallback = buttonUpCallback;
 }
 

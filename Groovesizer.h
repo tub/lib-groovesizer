@@ -23,8 +23,8 @@ class Groovesizer {
         void readButtons();
         void readPots();
         int getPotValue(byte channel);     
-        byte shiftIn(int dataPin, int clockPin);
-        void (*_buttonUpCallback)(byte row, byte col);
+        byte shiftIn(byte dataPin, byte clockPin);
+        void (*_buttonUpCallback)(byte row, byte col, unsigned int millisHeld);
         void (*_buttonDownCallback)(byte row, byte col);
         void (*_potChangeCallback)(byte pot, int val);
 
