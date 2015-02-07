@@ -17,19 +17,12 @@ const byte MUX_CHAN_PINS[] = { 17, 16, 15 }; // pins connected to the 4051 input
 const byte MUX_INPUT_PIN = 0;      // the analog pin connected to multiplexer output
 const byte MUX_CHAN_PIN_COUNT = 3;
 
-const byte Groovesizer::NUM_POTS = 6;
-
 // range for analog readings, max range is 0-1023
 const int ANALOG_RANGE_MIN = 25;
 const int ANALOG_RANGE_MAX = 1000;
 
 // debounce duration (millis)
 const byte DEBOUNCE_MILLIS = 10;
-
-// coords start bottom left, 0,0
-
-const byte Groovesizer::MATRIX_COLS = 8;
-const byte Groovesizer::MATRIX_ROWS = 5;
 
 // for the rows of LEDs
 // the byte that will be shifted out 

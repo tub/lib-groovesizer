@@ -12,12 +12,13 @@ class Groovesizer {
         bool getButton(byte row, byte col);
         void read();
         void write();
-        static const byte MATRIX_ROWS;
-        static const byte MATRIX_COLS;
-        static const byte NUM_POTS;
-		    void setButtonUpListener(void (*buttonUpCallback)(byte col, byte row));
+        static const byte MATRIX_ROWS = 5;
+        static const byte MATRIX_COLS = 8;
+        static const byte NUM_POTS = 6;
+		    void setButtonUpListener(void (*buttonUpCallback)(byte col, byte row, unsigned int millisHeld));
 		    void setButtonDownListener(void (*buttonDownCallback)(byte col, byte row));
         void setPotChangeListener(void (*potChangeCallback)(byte pot, int val));
+
     private:
         void writeLeds();
         void readButtons();
