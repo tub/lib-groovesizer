@@ -7,8 +7,8 @@ class Groovesizer {
     public:
         Groovesizer();
         ~Groovesizer();
-        void setLed(int row, int col, bool val);
-        void setLedRow(int row, byte val);
+        void setLed(byte row, byte col, bool val);
+        void setLedRow(byte row, byte val);
         bool getButton(byte row, byte col);
         void read();
         void write();

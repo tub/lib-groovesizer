@@ -89,7 +89,7 @@ Groovesizer::~Groovesizer(){
  * 
  * Row 0 is bottom row, col 0 is left-most column.
  */
-void Groovesizer::setLed(int row, int col, bool val){
+void Groovesizer::setLed(byte row, byte col, bool val){
   bitWrite(ledRows[row], Groovesizer::MATRIX_COLS - 1 - col, val);
 }
 
@@ -97,7 +97,7 @@ void Groovesizer::setLed(int row, int col, bool val){
  * sets a whole row of LEDs, each bit of `val` corresponds to an LED. 
  * LSB is right-most, MSB is left-most.
  */
-void Groovesizer::setLedRow(int row, byte val){
+void Groovesizer::setLedRow(byte row, byte val){
   ledRows[row] = val;
 }
 
@@ -225,7 +225,7 @@ byte Groovesizer::shiftIn(int dataPin, int clockPin) {
   //of the next bit in its serial information flow.
   //The register transmits the information about the pins from pin 7 to pin 0
   //so that is why our function counts down
-  for (int i = 0; i <= 7; i++)
+  for (byte i = 0; i <= 7; i++)
   {
     digitalWrite(clockPin, LOW);
     delayMicroseconds(2);
